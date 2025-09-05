@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: bank_a_db
     volumes:
       - bank_a_data:/var/lib/mysql
+      - .bank_a/scripts:/docker-entrypoint-initdb.d/
     networks:
       - bank-net
 
@@ -20,6 +21,7 @@ services:
       MYSQL_DATABASE: bank_b_db
     volumes:
       - bank_b_data:/var/lib/mysql
+      - .bank_b/scripts:/docker-entrypoint-initdb.d/
     networks:
       - bank-net
 
@@ -61,3 +63,4 @@ volumes:
 
 networks:
   bank-net:
+
