@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   bank_a_db:
+    container_name: bank_a_db
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:
@@ -9,24 +10,26 @@ services:
       MYSQL_DATABASE: bank_a_db
     volumes:
       - bank_a_data:/var/lib/mysql
-      - .bank_a/scripts:/docker-entrypoint-initdb.d/
+      - ./bank_a/scrips:/docker-entrypoint-initdb.d/
     networks:
       - bank-net
 
   bank_b_db:
     image: mysql:8.0
+    container_name: bank_b_db
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: bank_b_db
     volumes:
       - bank_b_data:/var/lib/mysql
-      - .bank_b/scripts:/docker-entrypoint-initdb.d/
+      - ./bank_b/scrips:/docker-entrypoint-initdb.d/
     networks:
       - bank-net
 
   bank_a:
     build: ./bank_a
+    container_name: bank_a
     environment:
       DB_HOST: bank_a_db
       DB_NAME: bank_a_db
@@ -37,12 +40,12 @@ services:
       - "5000:5000"
     depends_on:
       - bank_a_db
-      - bank_b
     networks:
       - bank-net
 
   bank_b:
     build: ./bank_b
+    container_name: bank_b
     environment:
       DB_HOST: bank_b_db
       DB_NAME: bank_b_db
@@ -53,7 +56,6 @@ services:
       - "5001:5000"
     depends_on:
       - bank_b_db
-      - bank_a
     networks:
       - bank-net
 
@@ -63,4 +65,3 @@ volumes:
 
 networks:
   bank-net:
-
